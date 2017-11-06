@@ -3,9 +3,9 @@ import numpy as np
 BLACK = "0"
 WHITE = "1"
 DELIM = " "
-DIMENSION = 45
+DIMENSION = 15
 def loadData(fileName):
-    imageDict = {} 
+    imageList = [] 
     with open(fileName) as file:
         imageName = None
         imageData = []
@@ -16,11 +16,11 @@ def loadData(fileName):
             else:
                 imageData.append([x == BLACK for x in line.strip().split(DELIM)])
                 if counter == DIMENSION:
-                    imageDict[imageName] = np.asarray(imageData)
+                    imageList.append(np.asarray(imageData))
                     imageData = []
                     counter = -1
             counter += 1
-    return imageDict
+    return imageList
 
 def loadBinary(fileName):
     imageList = []

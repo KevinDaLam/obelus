@@ -2,10 +2,10 @@ import filters
 import matplotlib.pyplot as plt
 import numpy as np
 
-FILTERDIM = 9
-IMAGEDIM = 45
+FILTERDIM = 3
+IMAGEDIM = 15
 STEP = 1
-
+THRESH = 2
 class Filter():
     def __init__(self, size, filter):
         self.size = size
@@ -13,7 +13,7 @@ class Filter():
 
     #TODO Implement dynamic stepping
     def convolve(self, imageData, imageSize):
-        outputSize = imageSize - self.size
+        outputSize = imageSize - self.size + 1
         res = np.empty((outputSize, outputSize), dtype = int)
         for x in range(outputSize):
             for y in range(outputSize):
@@ -22,21 +22,23 @@ class Filter():
                     for j in range(self.size):
                         if imageData[x + i, y + j]:
                            sum += self.filter[i][j]
-                res[x, y] = sum         
+                if sum > THRESH: 
+                    res[x, y] = 1         
+                else:
+                    res[x, y] = -1
         return res
 
 class ConvolveLayer():
     def __init__(self):
         self.filterList = []
-        for filter in filters.FILTERS9X9_2:
+        for filter in filters.FILTERS3X3:
             self.filterList.append(Filter(FILTERDIM, filter))
 
     def convolve(self, image):
         output = np.empty(0, dtype=int)
         for filter in self.filterList:
-            out = filter.convolve(image, IMAGEDIM)*75
-            plt.imshow(out, cmap="hot", interpolation="nearest")
-            plt.show()
+            out = filter.convolve(image, IMAGEDIM)
+            #plt.imshow(out, cmap="hot", interpolation="nearest")
+            #plt.show()
             output = np.append(output, out.flatten())
-            print out.flatten(), np.size(out)
         return output

@@ -4,8 +4,10 @@ import loader
 import numpy as np
 import datetime
 
-files = ("0_shrink.txt", "1_shrink.txt")
-featLength = 225
+files = ("shrink_0.txt", "shrink_1.txt")
+testfiles = ("test_0.txt", "test_1.txt", "test_2.txt")
+#featLength = 225
+featLength = 676
 
 def main():
     print datetime.datetime.now()
@@ -23,28 +25,34 @@ def main():
     #output_data = np.asarray(output_data)
     #print input_data
 
-    for index, file in enumerate(files):
-        print "Loading {}".format(file)
-        imageList = loader.loadData(file) 
-        outputArr = [index]
+    for index, ofile in enumerate(files):
+        print "Loading {}".format(ofile)
+        imageList = loader.loadData(ofile) 
+        #outputArr = [index]
+        outputArr = [0]*len(files)
+        outputArr[index] = 1
         print "Loaded: {} images".format(len(imageList))
         for image in imageList:
             input_data = np.vstack((input_data, CLayer.convolve(image))) 
             output_data.append(outputArr) 
-    output_data = np.asarray(output_data)
+    output_data = np.asmatrix(output_data)
 
-    ANN = kokoro.ANNetwork(1, featLength, featLength + 1, 1, 1, 1)   
-    ANN.Train(input_data, output_data, 10)
+    ANN = kokoro.ANNetwork(0.5, featLength, featLength + 1, 2, 2, 1)   
+    ANN.Train(input_data, output_data, 1000)
     
     #test_data = loader.loadBinary("test_shrink.txt")
     #for i in range(test_data.shape[0]):
     #    print(ANN.Predict(np.asmatrix(test_data[i])))
 
-    imageList = loader.loadData("test_shrink.txt")
-    for image in imageList:
-        test_data = CLayer.convolve(image)
-        print(ANN.Predict(np.asmatrix(test_data)))
-
+    with open("output.csv", 'w') as outfile:
+        for ofiles in testfiles:
+            outfile.write("{}\n".format(ofiles))
+            imageList = loader.loadData(ofiles)
+            for image in imageList:
+                test_data = CLayer.convolve(image)
+                output = ANN.Predict(np.asmatrix(test_data))
+                outfile.write(str(output.tolist()))
+                outfile.write("\n")
     print datetime.datetime.now()
 if __name__ == "__main__":
     main()

@@ -41,4 +41,5 @@ class ConvolveLayer():
             #plt.imshow(out, cmap="hot", interpolation="nearest")
             #plt.show()
             output = np.append(output, out.flatten())
-        return output
+        normed = (output - output.mean())/output.std()
+        return normed

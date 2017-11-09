@@ -34,7 +34,7 @@ class ANNetwork():
     def RandomizeWeights(self):
 
         for i in range(self._hidden_layers + 1):
-            self._parameters[i] = np.matrix(np.random.rand(self._parameters[i].shape[0], self._parameters[i].shape[1]))
+            self._parameters[i] = np.matrix(np.random.rand(self._parameters[i].shape[0], self._parameters[i].shape[1])) - 0.5
 
     def ForwardPropogate(self, input_dataset):
 
@@ -161,10 +161,11 @@ class ANNetwork():
         for i in range(n_iterations):
             a, z = self.ForwardPropogate(input_dataset)
             self.BackPropogate(a, z, output_dataset)
-            self._cost[i] = (self.Cost(input_dataset, output_dataset))
+            print i
+            #self._cost[i] = (self.Cost(input_dataset, output_dataset))
 
 
-        self.Plot_Error_Vs_Training_Epoch(n_iterations)
+        #self.Plot_Error_Vs_Training_Epoch(n_iterations)
 
         final_a, final_z = self.ForwardPropogate(input_dataset)
 
@@ -173,7 +174,7 @@ class ANNetwork():
         print("Expected Output")
         print(output_dataset)
         print("ERROR: ")
-        print(abs(np.sum(final_a[-1] - output_dataset)) / output_dataset.shape[0])
+        print(np.sum(abs(final_a[-1] - output_dataset)) / output_dataset.shape[0])
 
     def Predict(self, input_data):
 

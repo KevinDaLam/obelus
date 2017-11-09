@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import datetime
 
 class ANNetwork():
 
@@ -150,7 +151,9 @@ class ANNetwork():
         ax.set_xlabel('Iterations')  
         ax.set_ylabel('Cost')  
         ax.set_title('Error vs. Training Epoch')
+        plt.savefig('error_plots/error_plot_' + str(datetime.datetime.now()) + ".png")
         plt.show()
+        plt.close()
 
 
     def Train(self, input_dataset, output_dataset, n_iterations):
@@ -161,11 +164,11 @@ class ANNetwork():
         for i in range(n_iterations):
             a, z = self.ForwardPropogate(input_dataset)
             self.BackPropogate(a, z, output_dataset)
-            print i
-            #self._cost[i] = (self.Cost(input_dataset, output_dataset))
+            print("ITERATION: " + str(i))
+            self._cost[i] = (self.Cost(input_dataset, output_dataset))
 
 
-        #self.Plot_Error_Vs_Training_Epoch(n_iterations)
+        self.Plot_Error_Vs_Training_Epoch(n_iterations)
 
         final_a, final_z = self.ForwardPropogate(input_dataset)
 

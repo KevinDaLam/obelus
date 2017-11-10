@@ -10,7 +10,7 @@ testfiles = ("test_0.txt", "test_1.txt", "test_2.txt")
 featLength = 676
 
 def main():
-    print datetime.datetime.now()
+    print(datetime.datetime.now())
     CLayer = convolve.ConvolveLayer()
     input_data = np.empty((0, featLength), dtype = int)
     output_data = []
@@ -26,19 +26,19 @@ def main():
     #print input_data
 
     for index, ofile in enumerate(files):
-        print "Loading {}".format(ofile)
+        print("Loading {}".format(ofile))
         imageList = loader.loadData(ofile) 
         #outputArr = [index]
         outputArr = [0]*len(files)
         outputArr[index] = 1
-        print "Loaded: {} images".format(len(imageList))
+        print("Loaded: {} images".format(len(imageList)))
         for image in imageList:
             input_data = np.vstack((input_data, CLayer.convolve(image))) 
             output_data.append(outputArr) 
     output_data = np.asmatrix(output_data)
 
-    ANN = kokoro.ANNetwork(0.5, featLength, featLength + 1, 2, 2, 1)   
-    ANN.Train(input_data, output_data, 1000)
+    ANN = kokoro.ANNetwork(0.5, featLength, 300, 2, 2, 1)   
+    ANN.Train(input_data, output_data, 100)
     
     #test_data = loader.loadBinary("test_shrink.txt")
     #for i in range(test_data.shape[0]):
@@ -53,6 +53,6 @@ def main():
                 output = ANN.Predict(np.asmatrix(test_data))
                 outfile.write(str(output.tolist()))
                 outfile.write("\n")
-    print datetime.datetime.now()
+    print(datetime.datetime.now())
 if __name__ == "__main__":
     main()

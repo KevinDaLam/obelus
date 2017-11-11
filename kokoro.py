@@ -48,10 +48,11 @@ class ANNetwork():
             _input_dataset = np.insert(input_dataset, 0, values=np.ones(num_input), axis=1)
         else:
             _input_dataset = input_dataset
+            
+        z = [] # Before activation function
+        a = [_input_dataset] # First layer is 
 
-        z = []
-        a = [_input_dataset]
-
+        # Forward propogate z and a layers
         for i in range(self._hidden_layers + 1):
             z.append(a[i] * self._parameters[i].T)
             if (self._bias):
@@ -71,14 +72,11 @@ class ANNetwork():
         a, z = self.ForwardPropogate(input_dataset)
 
         total_cost = 0
+        #First term applies when true output = 1, second term applies when true output = 0
         for i in range(n_training_examples):
             first_term = np.multiply(true_output_data[i,:], np.log(a[-1][i,:]))
             second_term = np.multiply(1 - true_output_data[i,:], np.log(1 - a[-1][i,:]))
             total_cost += np.sum(first_term + second_term)
-
-        # first_term = np.multiply(true_output_data, np.log(a[-1]))
-        # second_term = np.multiply(1 - true_output_data, np.log(1 - a[-1]))
-        # total_cost = np.sum(first_term + second_term)
 
         total_cost = -total_cost / n_training_examples
         return total_cost
@@ -109,6 +107,7 @@ class ANNetwork():
         # Compute delta for preceding layers
         for j in range(self._hidden_layers-1, 0, -1):
 
+            # #Print for Debugging Matrices
             # print("PARAMETERS J")
             # print(self._parameters[j])
             # print("DELTAS J + 1")
@@ -135,7 +134,7 @@ class ANNetwork():
             # print("ACCUM " + str(j))
             # print(acc_deltas[j])
 
-        # # Regularization
+        # #TODO: Check Regularization
         # for i in range(len(acc_deltas)):
         #     acc_deltas[i][:,1:] = acc_deltas[i][:,1:] + (self._parameters[i][:,1:] * 0.01) / n_training_examples
 
@@ -184,7 +183,7 @@ class ANNetwork():
         predicted_a, predicted_z = self.ForwardPropogate(input_data)
         return predicted_a[-1]
 
-
+# Run this module on its own to run simple tests below
 if __name__ == '__main__':
 
     # Test Neural Net with Learning Rate 0.01, Input Vector Size of 2, 2 Hidden Neurons in each Hidden Layer, 2 Hidden Layers, Output Vector Size of 2

@@ -1,0 +1,7 @@
+The dataset used in this project was acquired from Kaggle: https://www.kaggle.com/xainano/handwrittenmathsymbols
+
+JPG Files 45x45
+
+Handwritten Math Symbols
+
+Contributor: Xai Nano
